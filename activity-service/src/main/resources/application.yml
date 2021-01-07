@@ -1,0 +1,20 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: ACTIVITY-SERVICE
+
+security:
+  oauth2:
+    resource:
+      userInfoUri: http://localhost:8080/api/auth/check_token
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
