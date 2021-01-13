@@ -1,10 +1,6 @@
 package com.sportingCenterBackEnd.service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,6 +60,7 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setDisplayName(formDTO.getDisplayName());
 		user.setEmail(formDTO.getEmail());
+		user.setNumber(formDTO.getNumber());
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
 		final HashSet<Role> roles = new HashSet<Role>();
 		roles.add(roleRepository.findByName(Role.ROLE_USER));
@@ -71,7 +68,19 @@ public class UserServiceImpl implements UserService {
 		user.setProvider(formDTO.getSocialProvider().getProviderType());
 		user.setEnabled(true);
 		user.setProviderUserId(formDTO.getProviderUserId());
+		user.setDataNascita(invertDate(formDTO.getDataNascita()));
+		user.setAbbonamento(formDTO.getAbbonamento());
+		user.setDataScadenza(invertDate(formDTO.getDataScadenza()));
 		return user;
+	}
+
+	private String invertDate(String date){
+		if(date!=null){
+			List<String> stringhe = Arrays.asList(date.split("-"));
+			if(stringhe.get(0).length()==4)
+				return new String(stringhe.get(2)+"-"+stringhe.get(1)+"-"+stringhe.get(0));
+		}
+		return date;
 	}
 
 	@Override
@@ -108,6 +117,19 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(existingUser);
 	}
 
+	public User modificaUserEsistente(final SignUpRequest signUpRequest) {
+		User existingUser = findUserByEmail(signUpRequest.getEmail());
+		existingUser.setDisplayName(signUpRequest.getDisplayName());
+		existingUser.setNumber(signUpRequest.getNumber());
+		existingUser.setEmail(signUpRequest.getEmail());
+		existingUser.setEnabled(signUpRequest.isEnabled());
+		existingUser.setDataNascita(invertDate(signUpRequest.getDataNascita()));
+		existingUser.setAbbonamento(signUpRequest.getAbbonamento());
+		existingUser.setDataScadenza(invertDate(signUpRequest.getDataScadenza()));
+		existingUser.setModifiedDate(Calendar.getInstance().getTime());
+		return userRepository.save(existingUser);
+	}
+
 	private SignUpRequest toUserRegistrationObject(String registrationId, OAuth2UserInfo oAuth2UserInfo) {
 		return SignUpRequest.getBuilder().addProviderUserID(oAuth2UserInfo.getId()).addDisplayName(oAuth2UserInfo.getName()).addEmail(oAuth2UserInfo.getEmail())
 				.addSocialProvider(GeneralUtils.toSocialProvider(registrationId)).addPassword("changeit").build();
@@ -116,5 +138,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> findUserById(Long id) {
 		return userRepository.findById(id);
+	}
+
+	@Override
+	public List<User> findUsersByRole(Long role) {
+		return (List<User>) userRepository.findUsersByRole(role);
 	}
 }

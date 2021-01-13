@@ -1,10 +1,7 @@
 package com.thoughtmechanix.zuulsvr.filters;
 
 import com.netflix.zuul.ZuulFilter;
-
-import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.thoughtmechanix.zuulsvr.model.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +9,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import javax.jws.soap.SOAPBinding;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 public class AuthenticationFilter extends ZuulFilter {
@@ -78,7 +70,8 @@ public class AuthenticationFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
 
         //If we are dealing with a call to the authentication service, let the call go through without authenticating
-        if ( ctx.getRequest().getRequestURI().equals("/authentication-service/api/auth/signin")){
+        if ( ctx.getRequest().getRequestURI().contains("/authentication-service/")){
+            ctx.addZuulRequestHeader("Authorization",  filterUtils.getAuthToken());
             return null;
         }
 

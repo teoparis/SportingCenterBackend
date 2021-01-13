@@ -18,23 +18,6 @@
       "sourceMethod": "getOauth2()"
     }
   ],
-  "properties": [
-    {
-      "name": "app.auth.token-expiration-msec",
-      "type": "java.lang.Long",
-      "sourceType": "com.sportingCenterBackEnd.config.AppProperties$Auth",
-      "defaultValue": 0
-    },
-    {
-      "name": "app.auth.token-secret",
-      "type": "java.lang.String",
-      "sourceType": "com.sportingCenterBackEnd.config.AppProperties$Auth"
-    },
-    {
-      "name": "app.oauth2.authorized-redirect-uris",
-      "type": "java.util.List<java.lang.String>",
-      "sourceType": "com.sportingCenterBackEnd.config.AppProperties$OAuth2"
-    }
-  ],
+  "properties": [],
   "hints": []
 }

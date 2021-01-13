@@ -44,6 +44,9 @@ public class User implements Serializable {
 	@Column(name = "DISPLAY_NAME")
 	private String displayName;
 
+	@Column(name = "dataNascita")
+	private String dataNascita;
+
 	@Column(name = "created_date", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date createdDate;
@@ -54,6 +57,15 @@ public class User implements Serializable {
 	private String password;
 
 	private String provider;
+
+	@Column(name = "number")
+	private String number;
+
+	@Column(name = "idAbbonamento")
+	private String abbonamento;
+
+	@Column(name = "dataScadenza")
+	private String dataScadenza;
 
 	// bi-directional many-to-many association to Role
 	@JsonIgnore
@@ -143,5 +155,20 @@ public class User implements Serializable {
 
 	public String getDisplayName() {
 		return displayName;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public void setDataNascita(String dataNascita) {
+		this.dataNascita = dataNascita;
+	}
+
+	public void setAbbonamento(String abbonamento) {
+		this.abbonamento = abbonamento;
+	}
+	public void setDataScadenza(String dataScadenza) {
+		this.dataScadenza = dataScadenza;
 	}
 }

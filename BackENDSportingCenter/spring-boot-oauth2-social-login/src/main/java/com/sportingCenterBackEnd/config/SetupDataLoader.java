@@ -41,7 +41,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 		Role userRole = createRoleIfNotFound(Role.ROLE_USER);
 		Role adminRole = createRoleIfNotFound(Role.ROLE_ADMIN);
 		Role modRole = createRoleIfNotFound(Role.ROLE_MODERATOR);
-		createUserIfNotFound("sporting@center.it", Set.of(userRole, adminRole, modRole));
+		createUserIfNotFound("sporting@center.it", Set.of(adminRole));
 		alreadySetup = true;
 	}
 

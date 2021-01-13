@@ -25,6 +25,16 @@ public class SignUpRequest {
 	@NotEmpty
 	private String email;
 
+	private boolean enabled;
+
+	private String number;
+
+	private String dataNascita;
+
+	private String abbonamento;
+
+	private String dataScadenza;
+
 	private SocialProvider socialProvider;
 
 	@Size(min = 6, message = "{Size.userDto.password}")
@@ -33,12 +43,34 @@ public class SignUpRequest {
 	@NotEmpty
 	private String matchingPassword;
 
-	public SignUpRequest(String providerUserId, String displayName, String email, String password, SocialProvider socialProvider) {
+	public SignUpRequest(String providerUserId, String displayName, String email, String password, SocialProvider socialProvider,
+						 boolean enabled, String number, String dataNascita,String abbonamento, String dataScadenza) {
 		this.providerUserId = providerUserId;
 		this.displayName = displayName;
 		this.email = email;
 		this.password = password;
 		this.socialProvider = socialProvider;
+		this.enabled = enabled;
+		this.number = number;
+		this.dataNascita = dataNascita;
+		this.abbonamento= abbonamento;
+		this.dataScadenza = dataScadenza;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public String getDataNascita() {
+		return dataNascita;
+	}
+
+	public String getAbbonamento(){
+		return abbonamento;
+	}
+
+	public String getDataScadenza() {
+		return dataScadenza;
 	}
 
 	public static Builder getBuilder() {
@@ -89,6 +121,10 @@ public class SignUpRequest {
 		return password;
 	}
 
+	public String getNumber() {
+		return number;
+	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -107,7 +143,12 @@ public class SignUpRequest {
 		private String displayName;
 		private String email;
 		private String password;
+		private String number;
 		private SocialProvider socialProvider;
+		private boolean enabled;
+		private String dataNascita;
+		private String abbonamento;
+		private String dataScadenza;
 
 		public Builder addProviderUserID(final String userID) {
 			this.providerUserID = userID;
@@ -134,8 +175,28 @@ public class SignUpRequest {
 			return this;
 		}
 
+		public Builder addNumber(final String number) {
+			this.number = number;
+			return this;
+		}
+
+		public Builder addDataNascita(final String dataNascita) {
+			this.dataNascita = dataNascita;
+			return this;
+		}
+
+		public Builder addAbbonamento(final String abbonamento) {
+			this.abbonamento = abbonamento;
+			return this;
+		}
+
+		public Builder addDataScadenza(final String dataScadenza) {
+			this.dataScadenza = dataScadenza;
+			return this;
+		}
+
 		public SignUpRequest build() {
-			return new SignUpRequest(providerUserID, displayName, email, password, socialProvider);
+			return new SignUpRequest(providerUserID, displayName, email, password, socialProvider, enabled, number, dataNascita, abbonamento,dataScadenza);
 		}
 	}
 }
