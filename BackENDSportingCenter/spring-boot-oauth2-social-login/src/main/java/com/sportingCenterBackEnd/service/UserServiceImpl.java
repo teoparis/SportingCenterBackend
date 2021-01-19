@@ -1,5 +1,9 @@
 package com.sportingCenterBackEnd.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +87,17 @@ public class UserServiceImpl implements UserService {
 		return date;
 	}
 
+	private String reInvertDate(String date){
+		if(date!=null){
+			List<String> stringhe = Arrays.asList(date.split("-"));
+			if(stringhe.get(0).length()==2)
+				return new String(stringhe.get(2)+"-"+stringhe.get(1)+"-"+stringhe.get(0));
+		}
+		return date;
+	}
+
+
+
 	@Override
 	public User findUserByEmail(final String email) {
 		return userRepository.findByEmail(email);
@@ -127,7 +142,26 @@ public class UserServiceImpl implements UserService {
 		existingUser.setAbbonamento(signUpRequest.getAbbonamento());
 		existingUser.setDataScadenza(invertDate(signUpRequest.getDataScadenza()));
 		existingUser.setModifiedDate(Calendar.getInstance().getTime());
+		if (existingUser.getAbbonamento() != null){
+			try {
+				existingUser.setExpired(check_expired(existingUser.getDataScadenza()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 		return userRepository.save(existingUser);
+	}
+
+	private Boolean check_expired(String date) throws ParseException {
+		if(date != null){
+			DateFormat dateFormat= new SimpleDateFormat("dd-MM-yyyy");
+			Date dataScadenza = dateFormat.parse(date);
+			Date now = new Date();
+			if(now.after(dataScadenza)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private SignUpRequest toUserRegistrationObject(String registrationId, OAuth2UserInfo oAuth2UserInfo) {

@@ -67,6 +67,10 @@ public class User implements Serializable {
 	@Column(name = "dataScadenza")
 	private String dataScadenza;
 
+	@Column(name = "expired")
+	private Boolean expired = false;
+
+
 	// bi-directional many-to-many association to Role
 	@JsonIgnore
 	@ManyToMany
@@ -171,4 +175,19 @@ public class User implements Serializable {
 	public void setDataScadenza(String dataScadenza) {
 		this.dataScadenza = dataScadenza;
 	}
+	public String getDataScadenza() {
+		return this.dataScadenza;
+	}
+
+	public String getAbbonamento() {
+		return this.abbonamento;
+	}
+
+	public void setExpired(Boolean checked) {
+		this.expired = checked;
+	}
+	public Boolean getExpired() {
+		return this.expired;
+	}
+
 }

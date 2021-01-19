@@ -17,6 +17,10 @@ import com.sportingCenterBackEnd.dto.LocalUser;
 import com.sportingCenterBackEnd.util.GeneralUtils;
 
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -70,6 +74,15 @@ public class UserController {
 
 	@RequestMapping(value = "usersbyrole/{role}", method = RequestMethod.GET)
 	public List<User> getUsersByRole(@PathVariable("role") Long role) {
+		List<User> userList = userRepository.findUsersByRole(role);
+
+		for (User user : userList) {
+			try {
+				user.setExpired(check_expired(user.getDataScadenza()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 		return (List<User>) userRepository.findUsersByRole(role);
 	}
 
@@ -94,5 +107,16 @@ public class UserController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "Utente modificato correttamente"));
 	}
 
+	private Boolean check_expired(String date) throws ParseException {
+		if(date != null){
+			DateFormat dateFormat= new SimpleDateFormat("dd-MM-yyyy");
+			Date dataScadenza = dateFormat.parse(date);
+			Date now = new Date();
+			if(now.after(dataScadenza)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }
