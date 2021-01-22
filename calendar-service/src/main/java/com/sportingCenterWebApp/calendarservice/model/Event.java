@@ -5,8 +5,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "Event")
-
-
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,10 +17,13 @@ public class Event {
     @Column(name = "end")
     private Date dataFine;
 
+    @Column(name = "color")
+    private String color;
+
     @Column(name = "title")
     private String title;
 
-    @Column(name = "allDay")
-    private Boolean allDay;
+    @Column(name = "ACT_ID")
+    private long activity_id;
 
 }
