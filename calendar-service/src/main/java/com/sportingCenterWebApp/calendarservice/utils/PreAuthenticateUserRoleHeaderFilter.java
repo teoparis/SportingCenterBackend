@@ -21,6 +21,8 @@ public class PreAuthenticateUserRoleHeaderFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String token = request.getHeader("Authorization");
 
+
+
         String rolesString = ((HttpServletRequest) servletRequest).getHeader("roles");
         List<String> roles = Arrays.asList(rolesString.split(" "));
         System.out.println("Questi sono i ruoli dell'utente autenticato :" + roles);

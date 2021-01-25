@@ -1,6 +1,6 @@
-package com.sportingCenterWebApp.subscriptionservice.repo;
+package com.sportingCenterWebApp.calendarservice.repo;
 
-import com.sportingCenterWebApp.subscriptionservice.model.Subscription;
+import com.sportingCenterWebApp.calendarservice.model.Subscription;
 import org.springframework.data.repository.CrudRepository;
 
 public interface SubscriptionRepository extends CrudRepository<Subscription, Long> {

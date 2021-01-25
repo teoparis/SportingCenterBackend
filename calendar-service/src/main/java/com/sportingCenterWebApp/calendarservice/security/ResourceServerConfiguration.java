@@ -1,5 +1,6 @@
 package com.sportingCenterWebApp.calendarservice.security;
 
+
 import com.sportingCenterWebApp.calendarservice.utils.PreAuthenticateUserRoleHeaderFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,7 +17,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .addFilterBefore(new PreAuthenticateUserRoleHeaderFilter(),
                         BasicAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated();
     }

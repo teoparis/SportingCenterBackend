@@ -1,4 +1,4 @@
-package com.sportingCenterWebApp.subscriptionservice.utils;
+package com.sportingCenterWebApp.calendarservice.utils;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

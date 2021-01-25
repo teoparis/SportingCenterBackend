@@ -1,10 +1,9 @@
-package com.sportingCenterWebApp.subscriptionservice.controller;
+package com.sportingCenterWebApp.calendarservice.controller;
 
-import com.sportingCenterWebApp.subscriptionservice.model.Subscription;
-import com.sportingCenterWebApp.subscriptionservice.repo.SubscriptionRepository;
+import com.sportingCenterWebApp.calendarservice.model.Subscription;
+import com.sportingCenterWebApp.calendarservice.repo.SubscriptionRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
