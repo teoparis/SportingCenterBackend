@@ -2,9 +2,7 @@ package com.sportingCenterWebApp.activityservice.controller;
 
 import com.sportingCenterWebApp.activityservice.model.Activity;
 import com.sportingCenterWebApp.activityservice.repo.ActivityRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +20,10 @@ public class ActivityController {
     public List<Activity> getActivities() {
 
         return (List<Activity>) activityRepository.findAll();
+    }
+
+    @PostMapping("/activity")
+    void addActivity(@RequestBody Activity activity){
+        activityRepository.save(activity);
     }
 }
