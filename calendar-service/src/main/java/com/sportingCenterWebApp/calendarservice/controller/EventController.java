@@ -15,7 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/admin")
 public class EventController {
-    //standard constructors
+
     private final EventRepository eventRepository;
 
     public EventController(EventRepository abbRepository) {
@@ -23,18 +23,17 @@ public class EventController {
     }
 
     @GetMapping("/events")
-    public List<Event> getActivities() {
+    public List<Event> getEvents() {
         return (List<Event>) eventRepository.findAll();
     }
 
     @PostMapping("/event")
-    void addActivity(@RequestBody Event event){
-        System.out.println(event);
+    void addEvent(@RequestBody Event event){
         eventRepository.save(event);
     }
 
     @PostMapping("/event/delete")
-    void deleteActivity(@RequestBody Event event) {
+    void deleteEvent(@RequestBody Event event) {
         eventRepository.delete(event);
     }
 }
