@@ -18,6 +18,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         BasicAuthenticationFilter.class)
                 .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/user/**").hasRole("USER")
                 .anyRequest()
                 .authenticated();
     }

@@ -28,6 +28,9 @@ public class Event {
     @Column(name = "activityId")
     private String activityId;
 
+    @Column(name = "numberPartecipants")
+    private Long number;
+
     public Event() {
         this.title ="";
         this.activityId ="";
@@ -37,6 +40,10 @@ public class Event {
 
     public String getTitle() {
         return this.title;
+    }
+
+    public String getActivityId(){
+        return this.activityId;
     }
 
     @Override

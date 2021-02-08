@@ -19,6 +19,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .addFilterBefore(new PreAuthenticateUserRoleHeaderFilter(),
                         BasicAuthenticationFilter.class)
                 .authorizeRequests()
+                    .antMatchers("/all/**").permitAll()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated();

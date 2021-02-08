@@ -1,10 +1,12 @@
 package com.sportingCenterWebApp.calendarservice.controller;
 
 import com.sportingCenterWebApp.calendarservice.model.Event;
+import com.sportingCenterWebApp.calendarservice.model.Subscription;
 import com.sportingCenterWebApp.calendarservice.repo.EventRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,12 +30,6 @@ public class EventController {
     @PostMapping("/event")
     void addActivity(@RequestBody Event event){
         System.out.println(event);
-        /*try {
-            Event event = new ObjectMapper().readValue(eventString,Event.class);
-            System.out.println(event);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         eventRepository.save(event);
     }
 

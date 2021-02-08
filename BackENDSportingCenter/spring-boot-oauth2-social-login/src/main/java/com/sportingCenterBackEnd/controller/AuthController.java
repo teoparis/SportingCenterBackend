@@ -56,6 +56,7 @@ public class AuthController {
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
 		try {
+			System.out.println("Data Nascita: " +  signUpRequest.getDataNascita());
 			userService.registerNewUser(signUpRequest);
 		} catch (UserAlreadyExistAuthenticationException e) {
 			//log.error("Exception Ocurred", e);
