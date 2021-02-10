@@ -75,6 +75,8 @@ public class AuthenticationFilter extends ZuulFilter {
             logger.debug(filterUtils.getAuthToken());
             ctx.addZuulRequestHeader("Authorization",  filterUtils.getAuthToken());
             return null;
+
+
         }
 
         if (isAuthTokenPresent()){
