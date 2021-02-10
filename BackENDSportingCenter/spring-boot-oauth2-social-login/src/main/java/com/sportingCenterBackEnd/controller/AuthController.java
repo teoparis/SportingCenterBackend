@@ -5,18 +5,15 @@ import javax.validation.Valid;
 import com.sportingCenterBackEnd.dto.*;
 import com.sportingCenterBackEnd.model.Role;
 import com.sportingCenterBackEnd.model.User;
+import com.sportingCenterBackEnd.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.token.Token;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.sportingCenterBackEnd.exception.UserAlreadyExistAuthenticationException;
@@ -34,6 +31,8 @@ import java.util.*;
 @EnableGlobalAuthentication
 public class AuthController {
 
+	private final UserRepository userRepository;
+
 	@Autowired
 	AuthenticationManager authenticationManager;
 
@@ -42,6 +41,10 @@ public class AuthController {
 
 	@Autowired
 	TokenProvider tokenProvider;
+
+	public AuthController(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -87,7 +90,11 @@ public class AuthController {
 		}
 	}
 
-
-
+	@RequestMapping(value = "SubIdByUserId/{userId}", method = RequestMethod.GET)
+	public String subIdByUserId(@PathVariable("userId") Long userId){
+		Optional<User> user = userRepository.findById(userId);
+		User user1 = user.get();
+		return user1.getAbbonamento();
+	}
 
 }

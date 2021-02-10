@@ -46,6 +46,10 @@ public class Event {
         return this.activityId;
     }
 
+    public String getInizio() {
+        return this.inizio;
+    }
+
     @Override
     public String toString() {
         return "{ "+ "Id: " +  this.id + " Name: " + this.title + " " + this.dataFine + " " + this
