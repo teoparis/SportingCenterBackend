@@ -97,4 +97,10 @@ public class AuthController {
 		return user1.getAbbonamento();
 	}
 
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public List<User> usersByIds(){
+		System.out.println("ciao");
+		return (List<User>) userRepository.findAll();
+	}
+
 }

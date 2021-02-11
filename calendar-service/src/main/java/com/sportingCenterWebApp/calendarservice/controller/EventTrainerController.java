@@ -1,28 +1,36 @@
 package com.sportingCenterWebApp.calendarservice.controller;
 
+import com.sportingCenterWebApp.calendarservice.model.Activity;
+import com.sportingCenterWebApp.calendarservice.model.Booking;
 import com.sportingCenterWebApp.calendarservice.model.Event;
+import com.sportingCenterWebApp.calendarservice.model.User;
+import com.sportingCenterWebApp.calendarservice.repo.BookingRepository;
 import com.sportingCenterWebApp.calendarservice.repo.EventRepository;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/trainer")
 public class EventTrainerController {
 
     private final EventRepository eventRepository;
+    private final BookingRepository bookingRepository;
 
-    public EventTrainerController(EventRepository abbRepository) {
-        this.eventRepository = abbRepository;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public EventTrainerController(EventRepository eventRepository, BookingRepository bookingRepository) {
+        this.eventRepository = eventRepository;
+        this.bookingRepository = bookingRepository;
     }
 
 
@@ -43,6 +51,30 @@ public class EventTrainerController {
         }
         return todayEvents;
     }
+
+    @GetMapping("/getusers/{eventId}")
+    public List<User> getUsersForEvent(@PathVariable("eventId") Long eventId) {
+        System.out.println(eventId);
+        List<Booking> bookingList = bookingRepository.findBookingsByEventid(eventId);
+        List<Long> usersId = new ArrayList<>();
+        for (Booking booking : bookingList) {
+            usersId.add(booking.getUser_id());
+        }
+
+        //Get All Users
+        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity("http://authentication-service/api/auth/users", User[].class);
+        User[] users = responseEntity.getBody();
+
+        //Get users with ids in usersids
+        List<User> usersForEvent = new ArrayList<>();
+        for (User user : users){
+            if (usersId.contains(user.getId())) {
+                usersForEvent.add(user);
+            }
+        }
+        return usersForEvent;
+    }
+
 
     private String aggiustaStringData(String stringaData) {
         String[] arrayString = stringaData.split("-");
