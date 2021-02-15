@@ -1,20 +1,40 @@
 server:
   port: 9001
 
-spring:
-  application:
-    name: ACTIVITY-SERVICE
+#spring:
+  #application:
+    #name: ACTIVITY-SERVICE
 
-security:
-  oauth2:
-    resource:
-      userInfoUri: http://localhost:8080/api/auth/check_token
+#security:
+  #oauth2:
+    #resource:
+      #userInfoUri: http://localhost:8080/api/auth/check_token
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://docker-mysql-activity:3306/SCactivity?createDatabaseIfNotExist=true
+    username: testuser
+    password: testuser@123
+    hikari:
+      initialization-fail-timeout: 0
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
 eureka:
   client:
     register-with-eureka: true
-    fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      zone1: http://service-registry:8761/eureka/
+    prefer-same-zone-eureka: true
+    region: region1
+    availability-zones:
+      region1: zone1
   instance:
-    hostname: localhost
+    prefer-ip-address: true
+    metadata-map:
+      zone: zone1

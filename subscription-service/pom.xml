@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sportingCenterWebApp</groupId>
-	<artifactId>event-service</artifactId>
+	<artifactId>subscription-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>event-service</name>
+	<name>subscription-service</name>
 	<description>Microservizio dedicato agli abbonamenti</description>
 
 	<properties>

@@ -64,6 +64,12 @@ public class EventUserController {
         return subEvents;
     }
 
+    @RequestMapping(value = "delete_booking/{userId}/{eventId}", method = RequestMethod.PUT)
+    public void deleteBooking(@PathVariable("userId") Long userId, @PathVariable("eventId") Long eventId){
+        bookingRepository.deleteByUserEventId(userId, eventId);
+    }
+
+
     @PutMapping("events/bookings/{idUser}/{eventId}")
     public void bookEvent(@PathVariable("idUser") Long userId, @PathVariable("eventId") Long eventId) {
         bookingRepository.save(new Booking(eventId,userId));

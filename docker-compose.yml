@@ -1,77 +1,139 @@
-version: '2'
+version: '3'
 services:
-  eurekaserver:
-     image:   johncarnell/tmx-eurekasvr:chapter7
-     ports:
-         - "8761:8761"
-  configserver:
-      image: johncarnell/tmx-confsvr:chapter7
-      ports:
-         - "8888:8888"
-      environment:
-         EUREKASERVER_PORT: 8761
-         EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-         ENCRYPT_KEY:       "IMSYMMETRIC"
-  zuulserver:
-      image: johncarnell/tmx-zuulsvr:chapter7
-      ports:
-        - "5555:5555"
-      environment:
-        PROFILE: "default"
-        SERVER_PORT: "5555"
-        CONFIGSERVER_PORT: 8888
-        EUREKASERVER_PORT: 8761
-        CONFIGSERVER_URI: "http://configserver:8888"
-        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-  database:
-      image: postgres:9.5
-      ports:
-        - "5432:5432"
-      environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=p0stgr@s
-        - POSTGRES_DB=eagle_eye_local
-  licensingservice:
-      image: johncarnell/tmx-licensing-service:chapter7
-      ports:
-        - "8082:8082"
-      environment:
-        PROFILE: "default"
-        SERVER_PORT: "8082"
-        ES_PORT:           9200
-        DATABASE_PORT:     5432
-        CONFIGSERVER_PORT: 8888
-        EUREKASERVER_PORT: 8761
-        AUTHSERVER_PORT:   8091
-        CONFIGSERVER_URI: "http://configserver:8888"
-        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-        AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-        ENCRYPT_KEY:       "IMSYMMETRIC"
-  organizationservice:
-      image: johncarnell/tmx-organization-service:chapter7
-      ports:
-        - "8085:8085"
-      environment:
-        PROFILE: "default"
-        SERVER_PORT: "8085"
-        DATABASE_PORT:     5432
-        CONFIGSERVER_PORT: 8888
-        EUREKASERVER_PORT: 8761
-        AUTHSERVER_PORT:   8091
-        CONFIGSERVER_URI: "http://configserver:8888"
-        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-        AUTHSERVER_URI:   "http://authenticationservice:8901/auth/user"
-        ENCRYPT_KEY:       "IMSYMMETRIC"
-  authenticationservice:
-      image: johncarnell/tmx-authentication-service:chapter7
-      ports:
-        - "8901:8901"
-      environment:
-        PROFILE: "default"
-        SERVER_PORT: "8901"
-        DATABASE_PORT:     5432
-        CONFIGSERVER_PORT: 8888
-        EUREKASERVER_PORT: 8761
-        CONFIGSERVER_URI: "http://configserver:8888"
-        EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
-        ENCRYPT_KEY:       "IMSYMMETRIC"
+  service-registry:
+    container_name: service-registry
+    hostname: service-registry
+    image: service-registry:latest
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    ports:
+      - 8761:8761
+
+  docker-mysql-activity:
+    image: mysql:latest
+    container_name: docker-mysql-activity
+    volumes:
+    - mysql_activity:/var/lib/mysql
+    ports:
+      - 33061:3306
+    environment:
+        - MYSQL_ROOT_PASSWORD=admin123
+        - MYSQL_DATABASE=SCactivity
+        - MYSQL_USER=testuser
+        - MYSQL_PASSWORD=testuser@123
+  docker-mysql-authentication:
+    image: mysql:latest
+    container_name: docker-mysql-authentication
+    volumes:
+    - mysql_authentication:/var/lib/mysql
+    ports:
+      - 33060:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - MYSQL_DATABASE=sportingCenter
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testuser@123
+  docker-mysql-subscription:
+    image: mysql:latest
+    container_name: docker-mysql-subscription
+    volumes:
+      - mysql_subscription:/var/lib/mysql
+    ports:
+      - 33062:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - MYSQL_DATABASE=SCSubscription
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testuser@123
+  docker-mysql-calendar:
+    image: mysql:latest
+    container_name: docker-mysql-calendar
+    volumes:
+    - mysql_calendar:/var/lib/mysql
+    ports:
+      - 33063:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - MYSQL_DATABASE=SCcalendar
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testuser@123
+
+  activity-service:
+    image: activity-service:latest
+    container_name: activity-service
+    environment:
+      - SPRING_APPLICATION_NAME=activity-service
+    hostname: activity-service
+    build:
+      context: ./activity-service
+      dockerfile: Dockerfile
+    ports:
+      - 9001:9001
+    depends_on:
+      - service-registry
+      - docker-mysql-activity
+  zuul-service:
+    image: zuul-service:latest
+    container_name: zuul-service
+    environment:
+      - SPRING_APPLICATION_NAME=zuul-service
+    hostname: zuul-service
+    build:
+      context: ./zuulsvr
+      dockerfile: Dockerfile
+    ports:
+      - 5555:5555
+    depends_on:
+      - service-registry
+  authentication-service:
+    image: authentication-service:latest
+    container_name: authentication-service
+    environment:
+      - SPRING_APPLICATION_NAME=authentication-service
+    hostname: authentication-service
+    build:
+      context: ./BackENDSportingCenter/spring-boot-oauth2-social-login
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - service-registry
+      - docker-mysql-authentication
+  subscription-service:
+    image: subscription-service:latest
+    container_name: subscription-service
+    environment:
+      - SPRING_APPLICATION_NAME=subscription-service
+    hostname: subscription-service
+    build:
+      context: ./subscription-service
+      dockerfile: Dockerfile
+    ports:
+    - 9002:9002
+    depends_on:
+      - service-registry
+      - docker-mysql-subscription
+  calendar-service:
+    image: calendar-service:latest
+    container_name: calendar-service
+    environment:
+      - SPRING_APPLICATION_NAME=calendar-service
+    hostname: calendar-service
+    build:
+      context: ./calendar-service
+      dockerfile: Dockerfile
+    ports:
+    - 9003:9003
+    depends_on:
+      - service-registry
+      - docker-mysql-calendar
+
+volumes:
+  mysql_activity:
+  mysql_subscription:
+  mysql_calendar:
+  mysql_authentication:
+
+
+
