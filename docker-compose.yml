@@ -3,7 +3,7 @@ services:
   service-registry:
     container_name: service-registry
     hostname: service-registry
-    image: service-registry:latest
+    image: taasproject/service-registry:latest
     build:
       context: ./service-registry
       dockerfile: Dockerfile
@@ -60,7 +60,7 @@ services:
       - MYSQL_PASSWORD=testuser@123
 
   activity-service:
-    image: activity-service:latest
+    image: taasproject/activity-service:latest
     container_name: activity-service
     environment:
       - SPRING_APPLICATION_NAME=activity-service
@@ -74,7 +74,7 @@ services:
       - service-registry
       - docker-mysql-activity
   zuul-service:
-    image: zuul-service:latest
+    image: taasproject/zuul-service:latest
     container_name: zuul-service
     environment:
       - SPRING_APPLICATION_NAME=zuul-service
@@ -87,7 +87,7 @@ services:
     depends_on:
       - service-registry
   authentication-service:
-    image: authentication-service:latest
+    image: taasproject/authentication-service:latest
     container_name: authentication-service
     environment:
       - SPRING_APPLICATION_NAME=authentication-service
@@ -101,7 +101,7 @@ services:
       - service-registry
       - docker-mysql-authentication
   subscription-service:
-    image: subscription-service:latest
+    image: taasproject/subscription-service:latest
     container_name: subscription-service
     environment:
       - SPRING_APPLICATION_NAME=subscription-service
@@ -115,7 +115,7 @@ services:
       - service-registry
       - docker-mysql-subscription
   calendar-service:
-    image: calendar-service:latest
+    image: taasproject/calendar-service:latest
     container_name: calendar-service
     environment:
       - SPRING_APPLICATION_NAME=calendar-service

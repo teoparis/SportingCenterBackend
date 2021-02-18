@@ -1,6 +1,6 @@
-#spring:
-  #application:
-    #name: API-GATEWAY-ZUUL
+spring:
+  application:
+    name: API-GATEWAY-ZUUL
   #profiles:
     #active:
       #default
@@ -40,5 +40,6 @@ eureka:
     prefer-ip-address: true
     metadata-map:
       zone: zone1
+    hostname: zuul-service
 
 

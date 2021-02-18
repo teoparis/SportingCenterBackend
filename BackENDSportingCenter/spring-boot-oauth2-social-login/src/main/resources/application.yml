@@ -8,9 +8,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://docker-mysql-authentication:3306/sportingCenter?createDatabaseIfNotExist=true
-    username: testuser
-    password: testuser@123
+    url: jdbc:mysql://${DB_HOST}/${DB_NAME}?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       initialization-fail-timeout: 0
   jpa:
@@ -19,6 +19,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  application:
+    name: AUTHENTICATION-SERVICE
 
 #eureka:
   #client:
@@ -42,6 +44,7 @@ eureka:
     prefer-ip-address: true
     metadata-map:
       zone: zone1
+    hostname: authentication-service
 
 #Setting the logging levels for the service
 logging:

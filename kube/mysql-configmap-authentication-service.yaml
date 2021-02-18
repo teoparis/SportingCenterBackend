@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-conf-authentication
+data:
+  host: mysql-authentication
+  name: sportingCenter

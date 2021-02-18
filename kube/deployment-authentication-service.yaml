@@ -1,0 +1,57 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: authentication-service
+  labels:
+    name: authentication-service
+spec:
+  ports:
+    - nodePort: 30003
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: authentication-service
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-service
+spec:
+  selector:
+    matchLabels:
+      app: authentication-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: authentication-service
+    spec:
+      containers:
+        - name: auth-service
+          image: taasproject/authentication-service:latest
+          ports:
+            - containerPort: 8080
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-conf-authentication  # name of configMap
+                  key: host
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-conf-authentication
+                  key: name
+            - name: DB_USERNAME  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials # Secret Name
+                  key: username
+            - name: DB_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zuul-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zuul-service
+  template:
+    metadata:
+      labels:
+        app: zuul-service
+    spec:
+      containers:
+        - name: zuul-service
+          image: taasproject/zuul-service:latest
+          ports:
+            - containerPort: 5555
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zuul-service
+spec:
+  selector:
+    app: zuul-service
+  ports:
+    - port: 5555
+      targetPort: 5555
+      nodePort: 30002
+  type: LoadBalancer

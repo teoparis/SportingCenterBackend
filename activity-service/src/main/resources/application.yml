@@ -13,9 +13,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://docker-mysql-activity:3306/SCactivity?createDatabaseIfNotExist=true
-    username: testuser
-    password: testuser@123
+    url: jdbc:mysql://${DB_HOST}/${DB_NAME}?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       initialization-fail-timeout: 0
   jpa:
@@ -24,6 +24,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  application:
+    name: ACTIVITY-SERVICE
 
 eureka:
   client:
@@ -38,3 +40,4 @@ eureka:
     prefer-ip-address: true
     metadata-map:
       zone: zone1
+    hostname: activity-service

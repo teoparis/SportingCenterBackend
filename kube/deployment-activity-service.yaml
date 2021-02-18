@@ -1,0 +1,57 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: activity-service
+  labels:
+    name: activity-service
+spec:
+  ports:
+    - nodePort: 30001
+      port: 9001
+      targetPort: 9001
+      protocol: TCP
+  selector:
+    app: activity-service
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activity-service
+spec:
+  selector:
+    matchLabels:
+      app: activity-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: activity-service
+    spec:
+      containers:
+        - name: activity-service
+          image: taasproject/activity-service:latest
+          ports:
+            - containerPort: 9001
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-conf-activity  # name of configMap
+                  key: host
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-conf-activity
+                  key: name
+            - name: DB_USERNAME  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials # Secret Name
+                  key: username
+            - name: DB_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
