@@ -1,0 +1,87 @@
+# Define a 'Service' To Expose mysql to Other Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-subscription  # DNS name
+  labels:
+    app: mysql-subscription
+    tier: database
+spec:
+  ports:
+    - port: 3308
+      targetPort: 3308
+  selector:       # mysql Pod Should contain same labels
+    app: mysql-subscription
+    tier: database
+  clusterIP: None  # We Use DNS, Thus ClusterIP is not relevant
+---
+# Define a 'Persistent Voulume Claim'(PVC) for Mysql Storage, dynamically provisioned by cluster
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim-subscription # name of PVC essential for identifying the storage data
+  labels:
+    app: mysql-subscription
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce   #This specifies the mode of the claim that we are trying to create.
+  resources:
+    requests:
+      storage: 256Mi    #This will tell kubernetes about the amount of space we are trying to claim.
+---
+# Configure 'Deployment' of mysql server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-subscription
+  labels:
+    app: mysql-subscription
+    tier: database
+spec:
+  selector: # mysql Pod Should contain same labels
+    matchLabels:
+      app: mysql-subscription
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: # Must match 'Service' and 'Deployment' selectors
+        app: mysql-subscription
+        tier: database
+    spec:
+      containers:
+        - image: mysql:latest # image from docker-hub
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD # Setting Root Password of mysql From a 'Secret'
+              valueFrom:
+                secretKeyRef:
+                  name: db-root-credentials # Name of the 'Secret'
+                  key: password   # 'key' inside the Secret which contains required 'value'
+            - name: MYSQL_USER # Setting USER username on mysql From a 'Secret'
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            - name: MYSQL_PASSWORD # Setting USER Password on mysql From a 'Secret'
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+            - name: MYSQL_DATABASE # Setting Database Name from a 'ConfigMap'
+              valueFrom:
+                configMapKeyRef:
+                  name: db-conf-subscription
+                  key: name
+          ports:
+            - containerPort: 3306
+              name: mysql-sub
+          volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql #This is the path in the container on which the mounting will take place.
+      volumes:
+        - name: mysql-persistent-storage # Obtaining 'volume' from PVC
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim-subscription

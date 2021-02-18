@@ -1,0 +1,57 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: subscription-service
+  labels:
+    name: subscription-service
+spec:
+  ports:
+    - nodePort: 30004
+      port: 9002
+      targetPort: 9002
+      protocol: TCP
+  selector:
+    app: subscription-service
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscription-service
+spec:
+  selector:
+    matchLabels:
+      app: subscription-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: subscription-service
+    spec:
+      containers:
+        - name: sub-service
+          image: taasproject/subscription-service:latest
+          ports:
+            - containerPort: 9002
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-conf-subscription  # name of configMap
+                  key: host
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-conf-subscription
+                  key: name
+            - name: DB_USERNAME  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials # Secret Name
+                  key: username
+            - name: DB_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password

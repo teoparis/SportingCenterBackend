@@ -8,9 +8,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://docker-mysql-subscription:3306/SCSubscription?createDatabaseIfNotExist=true
-    username: testuser
-    password: testuser@123
+    url: jdbc:mysql://${DB_HOST}/${DB_NAME}?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       initialization-fail-timeout: 0
   jpa:
@@ -19,6 +19,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  application:
+    name: SUBSCRIPTION-SERVICE
 
 
 eureka:
@@ -34,3 +36,4 @@ eureka:
     prefer-ip-address: true
     metadata-map:
       zone: zone1
+    hostname: subscription-service
