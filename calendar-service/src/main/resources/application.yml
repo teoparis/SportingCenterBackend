@@ -8,9 +8,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://docker-mysql-calendar:3306/SCcalendar?createDatabaseIfNotExist=true
-    username: testuser
-    password: testuser@123
+    url: jdbc:mysql://${DB_HOST}/${DB_NAME}?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       initialization-fail-timeout: 0
   jpa:
@@ -19,6 +19,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  application:
+    name: CALENDAR-SERVICE
 
 eureka:
   client:
@@ -33,3 +35,4 @@ eureka:
     prefer-ip-address: true
     metadata-map:
       zone: zone1
+    hostname: calendar-service

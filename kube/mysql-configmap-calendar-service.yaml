@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-conf-calendar
+data:
+  host: mysql-calendar
+  name: SCcalendar
