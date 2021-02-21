@@ -90,8 +90,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.tokenEndpoint()
 					.accessTokenResponseClient(authorizationCodeTokenResponseClient())
 					.and()
-				//.successHandler(oAuth2AuthenticationSuccessHandler)
-				//.failureHandler(oAuth2AuthenticationFailureHandler)
+				.successHandler(oAuth2AuthenticationSuccessHandler)
+				.failureHandler(oAuth2AuthenticationFailureHandler)
 					.and()
 				.logout();
 

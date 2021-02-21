@@ -2,6 +2,7 @@ package com.sportingCenterBackEnd.controller;
 
 import javax.validation.Valid;
 
+import com.sportingCenterBackEnd.config.CurrentUser;
 import com.sportingCenterBackEnd.dto.*;
 import com.sportingCenterBackEnd.model.Role;
 import com.sportingCenterBackEnd.model.User;
@@ -101,6 +102,11 @@ public class AuthController {
 	public List<User> usersByIds(){
 		System.out.println("ciao");
 		return (List<User>) userRepository.findAll();
+	}
+
+	@GetMapping("/authenticateToken")
+	public ResponseEntity<?> authenticateToken(@CurrentUser LocalUser user) {
+		return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
 	}
 
 }

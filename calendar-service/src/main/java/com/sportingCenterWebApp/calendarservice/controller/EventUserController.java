@@ -37,6 +37,7 @@ public class EventUserController {
         //Get Subscription From Subscription Microservice
         Subscription userSubscription = restTemplate.getForObject("http://subscription-service/all/subscriptions/getSubfromid/{subId}",
                 Subscription.class, subId);
+        System.out.println("Nome abbonamento: " + userSubscription.getName());
         Boolean nuoto = userSubscription.getNuoto();
         Boolean fitness = userSubscription.getFitness();
 
