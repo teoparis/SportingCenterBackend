@@ -1,16 +1,45 @@
 server:
   port: 9001
 
-#spring:
-  #application:
-    #name: ACTIVITY-SERVICE
+spring:
+  application:
+    name: ACTIVITY-SERVICE
+  profiles:
+    active: "dev"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
-#security:
-  #oauth2:
-    #resource:
-      #userInfoUri: http://localhost:8080/api/auth/check_token
+security:
+  oauth2:
+    resource:
+      userInfoUri: http://localhost:8080/api/auth/check_token
+---
 
 spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/SCactivity?createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+---
+
+spring:
+  profiles: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}/${DB_NAME}?createDatabaseIfNotExist=true
