@@ -1,11 +1,39 @@
 server:
   port: 9002
 
-#spring:
-  #application:
-    #name: SUBSCRIPTION-SERVICE
+spring:
+  application:
+    name: SUBSCRIPTION-SERVICE
+  profiles:
+    active: "dev"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+---
 
 spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/SCsubscriptions?createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+---
+spring:
+  profiles: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}/${DB_NAME}?createDatabaseIfNotExist=true
@@ -21,7 +49,6 @@ spring:
       ddl-auto: update
   application:
     name: SUBSCRIPTION-SERVICE
-
 
 eureka:
   client:
