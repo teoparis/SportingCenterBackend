@@ -1,11 +1,46 @@
 server:
   contextPath:   /auth
 
-#spring:
-  #application:
-    #name: AUTHENTICATION-SERVICE
+logging:
+  level:
+    com.netflix: WARN
+    org.springframework.web: WARN
+    com.thoughtmechanix: DEBUG
 
 spring:
+  application:
+    name: AUTHENTICATION-SERVICE
+  profiles:
+    active: "dev"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+---
+
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/sportingCenter?createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+---
+
+spring:
+  profiles: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}/${DB_NAME}?createDatabaseIfNotExist=true
@@ -13,23 +48,6 @@ spring:
     password: ${DB_PASSWORD}
     hikari:
       initialization-fail-timeout: 0
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    generate-ddl: true
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  application:
-    name: AUTHENTICATION-SERVICE
-
-#eureka:
-  #client:
-    #register-with-eureka: true
-    #fetch-registry: true
-    #service-url:
-      #defaultZone: http://localhost:8761/eureka/
-  #instance:
-    #hostname: localhost
 
 eureka:
   client:
@@ -45,10 +63,3 @@ eureka:
     metadata-map:
       zone: zone1
     hostname: authentication-service
-
-#Setting the logging levels for the service
-logging:
-  level:
-    com.netflix: WARN
-    org.springframework.web: WARN
-    com.thoughtmechanix: DEBUG
