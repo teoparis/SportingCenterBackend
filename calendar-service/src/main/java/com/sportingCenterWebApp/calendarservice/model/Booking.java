@@ -23,10 +23,9 @@ public class Booking {
     private long user_id;
 
     @Column(name = "presence")
-    private boolean presence = false;
+    private Boolean presence = false;
 
     public Booking(){
-
     }
 
     public Booking(long event_id, long user_id) {
