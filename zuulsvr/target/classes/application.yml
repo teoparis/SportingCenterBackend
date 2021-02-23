@@ -45,23 +45,6 @@ eureka:
       zone: zone1
     hostname: zuul-service
 
----
-
-spring:
-  profiles: docker
-eureka:
-  client:
-    register-with-eureka: true
-    service-url:
-      zone1: http://service-registry:8761/eureka/
-    prefer-same-zone-eureka: true
-    region: region1
-    availability-zones:
-      region1: zone1
-  instance:
-    prefer-ip-address: true
-    metadata-map:
-      zone: zone1
 
 
 

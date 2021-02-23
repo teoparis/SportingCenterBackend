@@ -10,9 +10,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +52,25 @@ public class EventTrainerController {
             }
         }
         return todayEvents;
+    }
+
+    @PostMapping("/setuserspresence/{eventId}")
+    public void setUsersPresence(@PathVariable("eventId") Long eventId, @Valid @RequestBody List<User> userList){
+        List<Long> usersIdList = new ArrayList<>();
+        for (User user: userList) {
+            System.out.println("Id: " + user.getId());
+            usersIdList.add(user.getId());
+        }
+
+        List<Booking> bookingsList = (List<Booking>) bookingRepository.findAll();
+        for (Booking booking: bookingsList) {
+            if(booking.getEvent_id() == eventId) {
+                if (usersIdList.contains(booking.getUser_id())){
+                    booking.setPresence();
+                    bookingRepository.save(booking);
+                }
+            }
+        }
     }
 
     @GetMapping("/getusers/{eventId}")

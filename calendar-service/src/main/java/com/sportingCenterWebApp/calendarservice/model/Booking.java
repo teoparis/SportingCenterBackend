@@ -22,6 +22,9 @@ public class Booking {
     @Column(name = "user_id")
     private long user_id;
 
+    @Column(name = "presence")
+    private boolean presence = false;
+
     public Booking(){
 
     }
@@ -46,6 +49,11 @@ public class Booking {
     public void setEvent_id(long event_id) {
         this.event_id = event_id;
     }
+
+    public void setPresence() {
+        this.presence = true;
+    }
+
 
     @Override
     public String toString() {
