@@ -53,6 +53,10 @@ public class Booking {
         this.presence = true;
     }
 
+    public Boolean getPresence() {
+        return this.presence;
+    }
+
 
     @Override
     public String toString() {
