@@ -9,31 +9,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8761:8761
-
-  docker-mysql-activity:
-    image: mysql:latest
-    container_name: docker-mysql-activity
-    volumes:
-    - mysql_activity:/var/lib/mysql
-    ports:
-      - 33061:3306
-    environment:
-        - MYSQL_ROOT_PASSWORD=admin123
-        - MYSQL_DATABASE=SCactivity
-        - MYSQL_USER=testuser
-        - MYSQL_PASSWORD=testuser@123
-  docker-mysql-authentication:
-    image: mysql:latest
-    container_name: docker-mysql-authentication
-    volumes:
-    - mysql_authentication:/var/lib/mysql
-    ports:
-      - 33060:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=admin123
-      - MYSQL_DATABASE=sportingCenter
-      - MYSQL_USER=testuser
-      - MYSQL_PASSWORD=testuser@123
   docker-mysql-subscription:
     image: mysql:latest
     container_name: docker-mysql-subscription
@@ -50,7 +25,7 @@ services:
     image: mysql:latest
     container_name: docker-mysql-calendar
     volumes:
-    - mysql_calendar:/var/lib/mysql
+      - mysql_calendar:/var/lib/mysql
     ports:
       - 33063:3306
     environment:
@@ -58,26 +33,36 @@ services:
       - MYSQL_DATABASE=SCcalendar
       - MYSQL_USER=testuser
       - MYSQL_PASSWORD=testuser@123
-
-  activity-service:
-    image: taasproject/activity-service:latest
-    container_name: activity-service
-    environment:
-      - SPRING_APPLICATION_NAME=activity-service
-    hostname: activity-service
-    build:
-      context: ./activity-service
-      dockerfile: Dockerfile
+  docker-mysql-activity:
+    image: mysql:latest
+    container_name: docker-mysql-activity
+    volumes:
+      - mysql_activity:/var/lib/mysql
     ports:
-      - 9001:9001
-    depends_on:
-      - service-registry
-      - docker-mysql-activity
+      - 33061:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - MYSQL_DATABASE=SCactivity
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testuser@123
+  docker-mysql-authentication:
+    image: mysql:latest
+    container_name: docker-mysql-authentication
+    volumes:
+      - mysql_authentication:/var/lib/mysql
+    ports:
+      - 33060:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - MYSQL_DATABASE=sportingCenter
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testuser@123
   zuul-service:
     image: taasproject/zuul-service:latest
     container_name: zuul-service
     environment:
       - SPRING_APPLICATION_NAME=zuul-service
+      - SPRING_PROFILES_ACTIVE=prod
     hostname: zuul-service
     build:
       context: ./zuulsvr
@@ -86,11 +71,54 @@ services:
       - 5555:5555
     depends_on:
       - service-registry
+  subscription-service:
+    image: subscription-service:latest
+    container_name: subscription-service
+    environment:
+      - SPRING_APPLICATION_NAME=subscription-service
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=docker-mysql-subscription
+      - DB_NAME=SCSubscription
+      - DB_USERNAME=testuser
+      - DB_PASSWORD=testuser@123
+    hostname: subscription-service
+    build:
+      context: ./subscription-service
+      dockerfile: Dockerfile
+    ports:
+      - 9002:9002
+    depends_on:
+      - service-registry
+      - docker-mysql-subscription
+  calendar-service:
+    image: calendar-service:latest
+    container_name: calendar-service
+    environment:
+      - SPRING_APPLICATION_NAME=calendar-service
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=docker-mysql-calendar
+      - DB_NAME=SCcalendar
+      - DB_USERNAME=testuser
+      - DB_PASSWORD=testuser@123
+    hostname: calendar-service
+    build:
+      context: ./calendar-service
+      dockerfile: Dockerfile
+    ports:
+      - 9003:9003
+    depends_on:
+      - service-registry
+      - docker-mysql-calendar
   authentication-service:
-    image: taasproject/authentication-service:latest
+    image: authentication-service:latest
     container_name: authentication-service
     environment:
       - SPRING_APPLICATION_NAME=authentication-service
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=docker-mysql-authentication
+      - DB_NAME=sportingCenter
+      - DB_USERNAME=testuser
+      - DB_PASSWORD=testuser@123
     hostname: authentication-service
     build:
       context: ./BackENDSportingCenter/spring-boot-oauth2-social-login
@@ -100,40 +128,30 @@ services:
     depends_on:
       - service-registry
       - docker-mysql-authentication
-  subscription-service:
-    image: taasproject/subscription-service:latest
-    container_name: subscription-service
+  activity-service:
+    image: activity-service:latest
+    container_name: activity-service
     environment:
-      - SPRING_APPLICATION_NAME=subscription-service
-    hostname: subscription-service
+      - SPRING_APPLICATION_NAME=activity-service
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=docker-mysql-activity
+      - DB_NAME=SCactivity
+      - DB_USERNAME=testuser
+      - DB_PASSWORD=testuser@123
+    hostname: activity-service
     build:
-      context: ./subscription-service
+      context: ./activity-service
       dockerfile: Dockerfile
     ports:
-    - 9002:9002
+      - 9001:9001
     depends_on:
       - service-registry
-      - docker-mysql-subscription
-  calendar-service:
-    image: taasproject/calendar-service:latest
-    container_name: calendar-service
-    environment:
-      - SPRING_APPLICATION_NAME=calendar-service
-    hostname: calendar-service
-    build:
-      context: ./calendar-service
-      dockerfile: Dockerfile
-    ports:
-    - 9003:9003
-    depends_on:
-      - service-registry
-      - docker-mysql-calendar
+      - docker-mysql-activity
 
 volumes:
   mysql_activity:
   mysql_subscription:
   mysql_calendar:
   mysql_authentication:
-
 
 
