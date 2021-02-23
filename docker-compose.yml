@@ -72,7 +72,7 @@ services:
     depends_on:
       - service-registry
   subscription-service:
-    image: subscription-service:latest
+    image: taasproject/subscription-service:latest
     container_name: subscription-service
     environment:
       - SPRING_APPLICATION_NAME=subscription-service
@@ -91,7 +91,7 @@ services:
       - service-registry
       - docker-mysql-subscription
   calendar-service:
-    image: calendar-service:latest
+    image: taasproject/calendar-service:latest
     container_name: calendar-service
     environment:
       - SPRING_APPLICATION_NAME=calendar-service
@@ -110,7 +110,7 @@ services:
       - service-registry
       - docker-mysql-calendar
   authentication-service:
-    image: authentication-service:latest
+    image: taasproject/authentication-service:latest
     container_name: authentication-service
     environment:
       - SPRING_APPLICATION_NAME=authentication-service
@@ -129,7 +129,7 @@ services:
       - service-registry
       - docker-mysql-authentication
   activity-service:
-    image: activity-service:latest
+    image: taasproject/activity-service:latest
     container_name: activity-service
     environment:
       - SPRING_APPLICATION_NAME=activity-service
