@@ -27,10 +27,7 @@ import com.sportingCenterBackEnd.security.oauth2.user.OAuth2UserInfo;
 import com.sportingCenterBackEnd.security.oauth2.user.OAuth2UserInfoFactory;
 import com.sportingCenterBackEnd.util.GeneralUtils;
 
-/**
- * @author Chinna
- * @since 26/3/18
- */
+
 @Service
 public class UserServiceImpl implements UserService {
 
