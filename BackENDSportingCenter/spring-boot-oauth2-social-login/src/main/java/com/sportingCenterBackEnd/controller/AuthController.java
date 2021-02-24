@@ -98,6 +98,12 @@ public class AuthController {
 		return user1.getAbbonamento();
 	}
 
+	@RequestMapping(value = "userbyid/{userId}", method = RequestMethod.GET)
+	public User userById(@PathVariable("userId") Long userId) {
+		Optional<User> user = userRepository.findById(userId);
+		return user.get();
+	}
+
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public List<User> usersByIds(){
 		System.out.println("ciao");

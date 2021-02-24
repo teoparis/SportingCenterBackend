@@ -37,7 +37,6 @@ public class EventUserController {
         //Get Subscription From Subscription Microservice
         Subscription userSubscription = restTemplate.getForObject("http://subscription-service/all/subscriptions/getSubfromid/{subId}",
                 Subscription.class, subId);
-        System.out.println("Nome abbonamento: " + userSubscription.getName());
         Boolean nuoto = userSubscription.getNuoto();
         Boolean fitness = userSubscription.getFitness();
 
@@ -79,7 +78,6 @@ public class EventUserController {
     @RequestMapping(value = "events/bookings/{userId}", method = RequestMethod.GET)
     public List<Event> getBookingForUser(@PathVariable("userId") Long userId) {
         List<Booking> userBookings = (List<Booking>) bookingRepository.findBookingsByUserid(userId);
-        System.out.println(userBookings);
         List<Long> userEventsIds = new ArrayList<>();
         for (Booking booking : userBookings) {
             userEventsIds.add(booking.getEvent_id());
