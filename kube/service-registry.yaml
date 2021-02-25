@@ -17,7 +17,7 @@ spec:
           image: taasproject/service-registry:latest
           ports:
             - containerPort: 8761
-          imagePullPolicy: Always
+          imagePullPolicy: Never
 ---
 apiVersion: v1
 kind: Service

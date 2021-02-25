@@ -15,9 +15,10 @@ spec:
       containers:
         - name: zuul-service
           image: taasproject/zuul-service:latest
+          args: ["--spring.profiles.active=prod"]
           ports:
             - containerPort: 5555
-          imagePullPolicy: Always
+          imagePullPolicy: Never
 ---
 apiVersion: v1
 kind: Service

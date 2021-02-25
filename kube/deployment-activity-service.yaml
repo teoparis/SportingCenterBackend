@@ -32,6 +32,7 @@ spec:
       containers:
         - name: activity-service
           image: taasproject/activity-service:latest
+          args: ["--spring.profiles.active=prod"]
           ports:
             - containerPort: 9001
           env:   # Setting Enviornmental Variables
@@ -55,3 +56,4 @@ spec:
                 secretKeyRef:
                   name: db-credentials
                   key: password
+          imagePullPolicy: Never

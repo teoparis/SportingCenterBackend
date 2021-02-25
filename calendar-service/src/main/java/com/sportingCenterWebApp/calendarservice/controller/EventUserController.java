@@ -6,13 +6,19 @@ import com.sportingCenterWebApp.calendarservice.model.Event;
 import com.sportingCenterWebApp.calendarservice.model.Subscription;
 import com.sportingCenterWebApp.calendarservice.repo.BookingRepository;
 import com.sportingCenterWebApp.calendarservice.repo.EventRepository;
+import com.sportingCenterWebApp.calendarservice.utils.GeneralUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.function.ObjLongConsumer;
 
@@ -32,7 +38,7 @@ public class EventUserController {
     }
 
     @RequestMapping(value = "events/{subId}", method = RequestMethod.GET)
-    public List<Event> getEventsForUser(@PathVariable("subId") Long subId) {
+    public List<Event> getEventsForUser(@PathVariable("subId") Long subId) throws ParseException {
 
         //Get Subscription From Subscription Microservice
         Subscription userSubscription = restTemplate.getForObject("http://subscription-service/all/subscriptions/getSubfromid/{subId}",
@@ -52,11 +58,18 @@ public class EventUserController {
             }
         }
 
-        //Get only events compatible with user subscritpion
+        //Get only events compatible with user subscritpion and not in the past
+        DateFormat dateFormat= new SimpleDateFormat("dd-MM-yyyy");
+        Date now = new Date();
+        now = GeneralUtils.removeTime(now);
+
         List<Event> allEvents = (List<Event>)eventRepository.findAll();
         List<Event> subEvents = new ArrayList<>();
         for(Event event : allEvents) {
-            if(getActivityById(subActivities, event.getActivityId()) != null){
+            String stringDataEventoNonReversed = StringUtils.substringBefore(event.getInizio(), "T");
+            String stringDataEvento = GeneralUtils.aggiustaStringData(stringDataEventoNonReversed);
+            Date dataEvento = dateFormat.parse(stringDataEvento);
+            if(getActivityById(subActivities, event.getActivityId()) != null && now.before(dataEvento)){
                 subEvents.add(event);
             }
         }

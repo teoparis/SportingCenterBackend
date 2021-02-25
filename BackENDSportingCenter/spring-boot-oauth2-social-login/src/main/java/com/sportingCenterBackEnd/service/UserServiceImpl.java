@@ -133,6 +133,8 @@ public class UserServiceImpl implements UserService {
 		User existingUser = findUserByEmail(signUpRequest.getEmail());
 		existingUser.setDisplayName(signUpRequest.getDisplayName());
 		existingUser.setNumber(signUpRequest.getNumber());
+		if(!signUpRequest.getPassword().equals("nochange"))
+			existingUser.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 		existingUser.setEmail(signUpRequest.getEmail());
 		existingUser.setEnabled(signUpRequest.isEnabled());
 		existingUser.setDataNascita(invertDate(signUpRequest.getDataNascita()));

@@ -32,6 +32,7 @@ spec:
       containers:
         - name: cal-service
           image: taasproject/calendar-service:latest
+          args: ["--spring.profiles.active=prod"]
           ports:
             - containerPort: 9003
           env:   # Setting Enviornmental Variables
@@ -55,3 +56,4 @@ spec:
                 secretKeyRef:
                   name: db-credentials
                   key: password
+          imagePullPolicy: Never
