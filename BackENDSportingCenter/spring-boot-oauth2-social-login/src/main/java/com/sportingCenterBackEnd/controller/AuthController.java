@@ -91,6 +91,15 @@ public class AuthController {
 		}
 	}
 
+	@GetMapping("/authenticateToken")
+	public ResponseEntity<?> authenticateToken(@CurrentUser LocalUser user) {
+		return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
+	}
+
+
+
+
+
 	@RequestMapping(value = "SubIdByUserId/{userId}", method = RequestMethod.GET)
 	public String subIdByUserId(@PathVariable("userId") Long userId){
 		Optional<User> user = userRepository.findById(userId);
@@ -106,13 +115,9 @@ public class AuthController {
 
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public List<User> usersByIds(){
-		System.out.println("ciao");
 		return (List<User>) userRepository.findAll();
 	}
 
-	@GetMapping("/authenticateToken")
-	public ResponseEntity<?> authenticateToken(@CurrentUser LocalUser user) {
-		return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
-	}
+
 
 }

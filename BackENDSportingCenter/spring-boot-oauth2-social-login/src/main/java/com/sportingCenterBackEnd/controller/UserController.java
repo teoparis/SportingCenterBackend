@@ -101,7 +101,6 @@ public class UserController {
 		try {
 			userService.modificaUserEsistente(signUpRequest);
 		} catch (UserAlreadyExistAuthenticationException e) {
-			//log.error("Exception Ocurred", e);
 			return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"), HttpStatus.BAD_REQUEST);
 		}
 		return ResponseEntity.ok().body(new ApiResponse(true, "Utente modificato correttamente"));
