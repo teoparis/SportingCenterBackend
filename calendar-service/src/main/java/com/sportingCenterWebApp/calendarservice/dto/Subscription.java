@@ -1,4 +1,4 @@
-package com.sportingCenterWebApp.calendarservice.model;
+package com.sportingCenterWebApp.calendarservice.dto;
 
 
 import lombok.Getter;
@@ -6,9 +6,11 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+
 @Getter
 @Setter
-public class Activity {
+
+public class Subscription {
 
     private long id;
 
@@ -16,17 +18,28 @@ public class Activity {
 
     private final String descr;
 
+
+    private int durataMesi;
+
+    private int ingressiSettimanali;
+
+    private int numeroIngressiTotale;
+
     private Boolean fitness;
 
     private Boolean nuoto;
 
-
-    public Activity() {
+    public Subscription() {
         this.name = "";
         this.descr = "";
+        this.durataMesi=0;
+        this.ingressiSettimanali=0;
+        this.numeroIngressiTotale=0;
+        this.nuoto=false;
+        this.fitness=false;
     }
 
-    public Activity(String name, String descr) {
+    public Subscription(String name, String descr) {
         this.name = name;
         this.descr = descr;
     }
@@ -51,9 +64,11 @@ public class Activity {
     public Boolean getFitness() {
         return fitness;
     }
+
     public Boolean getNuoto() {
         return nuoto;
     }
+
 
     @Override
     public String toString() {

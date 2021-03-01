@@ -50,6 +50,10 @@ public class Event {
         return this.inizio;
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
     @Override
     public String toString() {
         return "{ "+ "Id: " +  this.id + " Name: " + this.title + " " + this.dataFine + " " + this

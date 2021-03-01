@@ -1,4 +1,4 @@
-package com.sportingCenterWebApp.calendarservice.model;
+package com.sportingCenterWebApp.calendarservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

@@ -18,12 +18,17 @@ public class ActivityController {
 
     @GetMapping("/activities")
     public List<Activity> getActivities() {
-
         return (List<Activity>) activityRepository.findAll();
+    }
+
+    @PostMapping("/activities/delete")
+    void deleteActivity(@RequestBody Activity activity) {
+        activityRepository.delete(activity);
     }
 
     @PostMapping("/activity")
     void addActivity(@RequestBody Activity activity){
         activityRepository.save(activity);
     }
+
 }
