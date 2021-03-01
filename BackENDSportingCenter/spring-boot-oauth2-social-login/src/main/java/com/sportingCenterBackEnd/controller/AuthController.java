@@ -96,9 +96,15 @@ public class AuthController {
 		return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
 	}
 
-
-
-
+	@PostMapping("/modify")
+	public ResponseEntity<?> modifyUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+		try {
+			userService.modificaUserEsistente(signUpRequest);
+		} catch (UserAlreadyExistAuthenticationException e) {
+			return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"), HttpStatus.BAD_REQUEST);
+		}
+		return ResponseEntity.ok().body(new ApiResponse(true, "Utente modificato correttamente"));
+	}
 
 	@RequestMapping(value = "SubIdByUserId/{userId}", method = RequestMethod.GET)
 	public String subIdByUserId(@PathVariable("userId") Long userId){
