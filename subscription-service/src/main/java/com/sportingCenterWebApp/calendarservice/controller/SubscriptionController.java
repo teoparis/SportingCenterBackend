@@ -23,13 +23,12 @@ public class SubscriptionController {
     }
 
     @PostMapping("/subscription")
-    void addActivity(@RequestBody Subscription abb){
+    void addSubscription(@RequestBody Subscription abb){
         subscriptionRepository.save(abb);
     }
 
     @PostMapping("/modifysub")
-    void modifyActivity(@RequestBody Subscription newabb,@RequestBody Subscription oldabb){
-        //subscriptionRepository.delete(oldabb);
+    void modifySubscription(@RequestBody Subscription newabb,@RequestBody Subscription oldabb){
         subscriptionRepository.save(newabb);
     }
 

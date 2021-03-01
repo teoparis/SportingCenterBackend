@@ -89,7 +89,7 @@ public class EventService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if(getActivityById(subActivities, event.getActivityId()) != null && now.before(dataEvento)){
+            if(getActivityById(subActivities, event.getActivityId()) != null && (now.before(dataEvento) || now.equals(dataEvento))){
                 subEvents.add(event);
             }
         }
