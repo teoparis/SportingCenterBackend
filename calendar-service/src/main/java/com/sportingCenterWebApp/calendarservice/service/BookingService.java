@@ -27,7 +27,9 @@ public class BookingService {
         List<Booking> bookingList = bookingRepository.findBookingsByEventid(eventId);
         List<Long> usersId = new ArrayList<>();
         for (Booking booking : bookingList) {
-            usersId.add(booking.getUser_id());
+            if(!booking.getPresence()) {
+                usersId.add(booking.getUser_id());
+            }
         }
 
         //Get All Users
