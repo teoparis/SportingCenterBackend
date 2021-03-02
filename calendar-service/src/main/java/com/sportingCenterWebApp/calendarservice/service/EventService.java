@@ -5,6 +5,7 @@ import com.sportingCenterWebApp.calendarservice.dto.Subscription;
 import com.sportingCenterWebApp.calendarservice.dto.User;
 import com.sportingCenterWebApp.calendarservice.model.Booking;
 import com.sportingCenterWebApp.calendarservice.model.Event;
+import com.sportingCenterWebApp.calendarservice.repo.BookingRepository;
 import com.sportingCenterWebApp.calendarservice.repo.EventRepository;
 import com.sportingCenterWebApp.calendarservice.utils.GeneralUtils;
 import org.apache.commons.lang.StringUtils;
@@ -27,6 +28,9 @@ public class EventService {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private BookingService bookingService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -54,7 +58,7 @@ public class EventService {
         return todayEvents;
     }
 
-    public List<Event> getEventsForUser(Long subId) {
+    public List<Event> getEventsForUser(Long subId, Long userId) {
         //Get Subscription From Subscription Microservice
         Subscription userSubscription = restTemplate.getForObject("http://subscription-service/all/subscriptions/getSubfromid/{subId}",
                 Subscription.class, subId);
@@ -73,7 +77,7 @@ public class EventService {
             }
         }
 
-        //Get only events compatible with user subscritpion and not in the past
+        //Get only events compatible with user subscription and not in the past and for which is not booked yet
         DateFormat dateFormat= new SimpleDateFormat("dd-MM-yyyy");
         Date now = new Date();
         now = GeneralUtils.removeTime(now);
@@ -89,7 +93,8 @@ public class EventService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if(getActivityById(subActivities, event.getActivityId()) != null && (now.before(dataEvento) || now.equals(dataEvento))){
+            if(getActivityById(subActivities, event.getActivityId()) != null && (now.before(dataEvento) || now.equals(dataEvento))
+            && !checkIsBooked(userId, event.getId())){
                 subEvents.add(event);
             }
         }
@@ -107,6 +112,15 @@ public class EventService {
         return null;
     }
 
+    private boolean checkIsBooked(Long userId, Long eventId) {
+        for (Booking booking : bookingService.findAll()) {
+            if (booking.getUser_id() == userId && booking.getEvent_id() == eventId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<Event> findAllById(List<Long> userEventsIds) {
         List<Event> userEvents = (List<Event>) eventRepository.findAllById(userEventsIds);
         return userEvents;
@@ -121,11 +135,9 @@ public class EventService {
     }
 
     public void delete(Event event) {
-        //Delete all bookings with this event
-
-
-        //Delete the event
         eventRepository.delete(event);
     }
+
+
 
 }

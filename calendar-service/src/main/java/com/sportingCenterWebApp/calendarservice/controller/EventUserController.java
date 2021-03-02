@@ -23,9 +23,9 @@ public class EventUserController {
     private BookingService bookingService;
 
 
-    @RequestMapping(value = "events/{subId}", method = RequestMethod.GET)
-    public List<Event> getEventsForUser(@PathVariable("subId") Long subId) throws ParseException {
-        return eventService.getEventsForUser(subId);
+    @RequestMapping(value = "events/{subId}/{userId}", method = RequestMethod.GET)
+    public List<Event> getEventsForUser(@PathVariable("subId") Long subId, @PathVariable("userId") Long userId) throws ParseException {
+        return eventService.getEventsForUser(subId, userId);
     }
 
     @RequestMapping(value = "delete_booking/{userId}/{eventId}", method = RequestMethod.PUT)

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
+import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -102,5 +103,9 @@ public class BookingService {
             }
         }
         return usersPresent;
+    }
+
+    protected List<Booking> findAll() {
+        return (List<Booking>)bookingRepository.findAll();
     }
 }
