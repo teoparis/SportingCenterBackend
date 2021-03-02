@@ -93,9 +93,9 @@ public class EventService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if(getActivityById(subActivities, event.getActivityId()) != null && (now.before(dataEvento) || now.equals(dataEvento))
-            && !checkIsBooked(userId, event.getId())){
-                subEvents.add(event);
+            if(getActivityById(subActivities, event.getActivityId()) != null && (now.before(dataEvento) || now.equals(dataEvento))){
+               if (!checkIsBooked(userId, event.getId()))
+                   subEvents.add(event);
             }
         }
 
