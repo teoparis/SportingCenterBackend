@@ -23,7 +23,7 @@ public class EventUserController {
     private BookingService bookingService;
 
 
-    @RequestMapping(value = "events/{subId}/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "events/{subId}/{userId}", method = RequestMethod.PUT)
     public List<Event> getEventsForUser(@PathVariable("subId") Long subId, @PathVariable("userId") Long userId) throws ParseException {
         return eventService.getEventsForUser(subId, userId);
     }
